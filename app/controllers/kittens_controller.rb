@@ -1,32 +1,56 @@
 class KittensController < ApplicationController
   def new
-    @kitten=Kitten.new(name: "mittens", age: 2, cuteness: 8, softness: 10)
+    @kitten=Kitten.new
   end
 
   def create
-    @kitten="you can create here"
+    @kitten = Kitten.new(kitten_params)
+    if @kitten.save
+      flash[:success] = "Kitten successfully created!"
+      redirect_to @kitten
+    else
+      flash.now[:error] = "Kitten creation failed"
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
-    @kitten=Kitten.new(name: "mittens", age: 2, cuteness: 8, softness: 10)
+    @kitten=Kitten.find(params[:id])
   end
 
   def index
-    @kitten1=Kitten.new(name: "mittens", age: 2, cuteness: 8, softness: 10)
-    @kitten2=Kitten.new(name: "puss", age: 12, cuteness: 7, softness: 5)
-    @kitten3=Kitten.new(name: "garfield", age: 9, cuteness: 3, softness: 3)
-
-    @kittens=[ @kitten1, @kitten2, @kitten3 ]
+    @kittens=Kitten.all
   end
 
   def update
+    @kitten=Kitten.find(params[:id])
+    if @kitten.update(kitten_params)
+      flash[:success]="Kitten successfully updated!"
+      redirect_to @kitten
+    else
+      flash.now[:error] = "Error: Kitten could not be updated"
+      render :edit
+    end
   end
 
   def destroy
-    @kitten="you can destroy here"
+    @kitten=Kitten.find(params[:id])
+    if @kitten.destroy
+      flash[:notice]="Kitten successfully deleted."
+      redirect_to kittens_url
+    else
+      flash.now[:error] = "Error: Kitten could not be deleted"
+      redirect_to kitten_url(@kitten)
+    end
   end
 
   def edit
-    @kitten="you can edit here"
+    @kitten=Kitten.find(params[:id])
+  end
+
+  private
+
+  def kitten_params
+    params.require(:kitten).permit(:name, :age, :cuteness, :softness)
   end
 end

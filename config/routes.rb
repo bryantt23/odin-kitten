@@ -1,11 +1,6 @@
 Rails.application.routes.draw do
-  get "kittens/new"
-  get "kittens/create"
-  get "kittens/show"
-  get "kittens/index"
-  get "kittens/update"
-  get "kittens/destroy"
-  get "kittens/edit"
+  resources :kittens
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root to: "kittens#index"
